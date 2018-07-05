@@ -1,0 +1,74 @@
+---
+# Copyright 2018 widdix GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'cfn-modules: AWS EBS volume'
+# cfn-modules:implements(ExposeId)
+Parameters:
+  VpcModule:
+    Description: 'Stack name of vpc module.'
+    Type: String
+  # AlertingModule:
+  #   Description: 'Optional but recommended stack name of alerting module.'
+  #   Type: String
+  #   Default: ''
+  KmsKeyModule:
+    Description: 'Optional but recommended stack name of kms-key module.'
+    Type: String
+    Default: ''
+  AZChar: # TODO rename to SubnetAZChar
+    Description: 'Availability zone char.'
+    Type: String
+    Default: A
+    AllowedValues: [A, B, C]
+  Size:
+    Description: 'The size of the volume, in gibibytes (GiBs).'
+    Type: Number
+    Default: 64
+    MinValue: 4
+    MaxValue: 16384
+  Iops:
+    Description: 'The number of I/O operations per second (IOPS) that the volume supports (set to 99 to disable).'
+    Type: Number
+    Default: 99
+    MinValue: 99
+    MaxValue: 32000
+Conditions:
+  # HasAlertingModule: !Not [!Equals [!Ref AlertingModule, '']]
+  HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
+  HasIops: !Not [!Equals [!Ref Iops, 99]]
+Resources:
+  # TODO add alarms
+  Volume:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: {'Fn::ImportValue': !Sub '${VpcModule}-AvailabilityZone${AZChar}'}
+      Encrypted: !If [HasKmsKeyModule, true, false]
+      Iops: !If [HasIops, !Ref Iops, !Ref 'AWS::NoValue']
+      KmsKeyId: !If [HasKmsKeyModule, {'Fn::ImportValue': !Sub '${KmsKeyModule}-Arn'}, !Ref 'AWS::NoValue']
+      Size: !Ref Size
+      # TODO support SnapshotId
+      VolumeType: !If [HasIops, io1, gp2]
+Outputs:
+  ModuleId:
+    Value: 'ebs-volume'
+  ModuleVersion:
+    Value: '0.0.1'
+  StackName:
+    Value: !Ref 'AWS::StackName'
+  Id:
+    Description: 'The id of the volume.'
+    Value: !Ref Volume
+    Export:
+      Name: !Sub '${AWS::StackName}-Id'
