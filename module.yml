@@ -27,7 +27,7 @@ Parameters:
     Description: 'Optional but recommended stack name of kms-key module.'
     Type: String
     Default: ''
-  AZChar: # TODO rename to SubnetAZChar or rename SubnetAZChar to AZCHar
+  AZChar:
     Description: 'Availability zone char.'
     Type: String
     Default: A
