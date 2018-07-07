@@ -87,3 +87,10 @@ Resources:
     </tr>
   </tbody>
 </table>
+
+## Limitations
+
+* Highly available: EBS volumes only live in a single AZ by design
+* Scalable: EBS volumes throughput is limited by design
+* Secure: Backups are not enabled
+* Operations friendly: Alerting is not enabled

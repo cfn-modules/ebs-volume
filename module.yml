@@ -49,7 +49,7 @@ Conditions:
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasIops: !Not [!Equals [!Ref Iops, 99]]
 Resources:
-  # TODO add alarms
+  # TODO add alarms and remove limitation
   Volume:
     Type: 'AWS::EC2::Volume'
     Properties:
