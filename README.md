@@ -92,5 +92,5 @@ Resources:
 
 * Highly available: EBS volumes only live in a single AZ by design
 * Scalable: EBS volumes throughput is limited by design
-* Secure: Backups are not enabled
+* Secure: EBS volume is not backed up
 * Operations friendly: Alerting is not enabled
