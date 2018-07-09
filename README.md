@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/cfn-modules/ebs-volume.svg?branch=master)](https://travis-ci.org/cfn-modules/ebs-volume)
+[![NPM version](https://img.shields.io/npm/v/@cfn-modules/ebs-volume.svg)](https://www.npmjs.com/package/@cfn-modules/ebs-volume)
+
 # cfn-modules: AWS EBS volume
 
 AWS EBS volume with [alerting](https://www.npmjs.com/package/@cfn-modules/alerting).
