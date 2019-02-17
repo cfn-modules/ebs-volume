@@ -51,6 +51,8 @@ Conditions:
 Resources:
   # TODO add alarms and remove limitation
   Volume:
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
     Type: 'AWS::EC2::Volume'
     Properties:
       AvailabilityZone: {'Fn::ImportValue': !Sub '${VpcModule}-AvailabilityZone${AZChar}'}
@@ -64,7 +66,7 @@ Outputs:
   ModuleId:
     Value: 'ebs-volume'
   ModuleVersion:
-    Value: '1.0.0'
+    Value: '1.1.0'
   StackName:
     Value: !Ref 'AWS::StackName'
   Id:
