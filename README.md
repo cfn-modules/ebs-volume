@@ -33,6 +33,16 @@ Resources:
       TemplateURL: './node_modules/@cfn-modules/ebs-volume/module.yml'
 ```
 
+## Examples
+
+* [ec2-ebs](https://github.com/cfn-modules/docs/tree/master/examples/ec2-ebs)
+
+## Related modules
+
+* [ec2-instance-amazon-linux](https://github.com/cfn-modules/ec2-instance-amazon-linux)
+* [ec2-instance-amazon-linux2](https://github.com/cfn-modules/ec2-instance-amazon-linux2)
+* [efs-file-system](https://github.com/cfn-modules/efs-file-system)
+
 ## Parameters
 
 <table>
