@@ -119,6 +119,7 @@ Resources:
             Action:
             - 'ec2:DescribeVolumes'
             - 'ec2:DescribeSnapshots'
+            - 'ec2:DescribeTags'
             Resource: '*'
   BackupSelection:
     Type: 'AWS::Backup::BackupSelection'
