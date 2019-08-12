@@ -45,9 +45,9 @@ Parameters:
     MinValue: 99
     MaxValue: 32000
   BackupRetentionPeriod:
-    Description: 'The number of days to keep backups of the EBS volume.'
+    Description: 'The number of days to keep backups of the EBS volume (set to 0 to disable).'
     Type: Number
-    MinValue: 1
+    MinValue: 0
     MaxValue: 35
     Default: 30
   BackupScheduleExpression:
@@ -58,6 +58,7 @@ Conditions:
   HasAlertingModule: !Not [!Equals [!Ref AlertingModule, '']]
   HasKmsKeyModule: !Not [!Equals [!Ref KmsKeyModule, '']]
   HasIops: !Not [!Equals [!Ref Iops, 99]]
+  HasBackupRetentionPeriod: !Not [!Equals [!Ref BackupRetentionPeriod, 0]]
 Resources:
   # TODO add alarms and remove limitation
   Volume:
@@ -73,11 +74,13 @@ Resources:
       # TODO support SnapshotId
       VolumeType: !If [HasIops, io1, gp2]
   BackupVault: # cannot be deleted with data
+    Condition: HasBackupRetentionPeriod
     Type: 'AWS::Backup::BackupVault'
     Properties:
       BackupVaultName: !Ref 'AWS::StackName'
       Notifications: !If [HasAlertingModule, {BackupVaultEvents: [BACKUP_JOB_STARTED, BACKUP_JOB_COMPLETED, RESTORE_JOB_STARTED, RESTORE_JOB_COMPLETED, RECOVERY_POINT_MODIFIED], SNSTopicArn: {'Fn::ImportValue': !Sub '${AlertingModule}-Arn'}}, !Ref 'AWS::NoValue']
   BackupPlan:
+    Condition: HasBackupRetentionPeriod
     Type: 'AWS::Backup::BackupPlan'
     Properties:
       BackupPlan:
@@ -91,6 +94,7 @@ Resources:
           StartWindowMinutes: 60
           TargetBackupVault: !Ref BackupVault
   BackupRole:
+    Condition: HasBackupRetentionPeriod
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -122,6 +126,7 @@ Resources:
             - 'ec2:DescribeTags'
             Resource: '*'
   BackupSelection:
+    Condition: HasBackupRetentionPeriod
     Type: 'AWS::Backup::BackupSelection'
     Properties:
       BackupPlanId: !Ref BackupPlan
