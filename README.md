@@ -27,9 +27,11 @@ Resources:
         VpcModule: !GetAtt 'Vpc.Outputs.StackName' # required
         AlertingModule: !GetAtt 'Alerting.Outputs.StackName' # optional
         KmsKeyModule: !GetAtt 'Key.Outputs.StackName' # optional
-        AZChar: A # optional
+        AZChar: 'A' # optional
         Size: '64' # optional
         Iops: '99' # optional (set to 99 to disable)
+        BackupRetentionPeriod: '30' # optional
+        BackupScheduleExpression: 'cron(0 5 ? * * *)' # optional
       TemplateURL: './node_modules/@cfn-modules/ebs-volume/module.yml'
 ```
 
@@ -98,6 +100,20 @@ Resources:
       <td>no</td>
       <td>[99-32000]</td>
     </tr>
+    <tr>
+      <td>BackupRetentionPeriod</td>
+      <td>The number of days to keep backups of the EBS volume (set to 0 to disable)</td>
+      <td>30</td>
+      <td>no</td>
+      <td>[0-35]</td>
+    </tr>
+    <tr>
+      <td>BackupScheduleExpression</td>
+      <td>A CRON expression specifying when AWS Backup initiates a backup job</td>
+      <td>cron(0 5 ? * * *)</td>
+      <td>no</td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
@@ -105,5 +121,4 @@ Resources:
 
 * Highly available: EBS volumes only live in a single AZ by design
 * Scalable: EBS volumes throughput is limited by design
-* Secure: EBS volume is not backed up
 * Operations friendly: Alerting is not enabled
